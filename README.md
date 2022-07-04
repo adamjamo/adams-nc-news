@@ -5,7 +5,7 @@ Welcome to my NC-News project! You will need to add two .env files when pulling 
 **_ Dependencies: _**
 
 Postgres - npm i pg
-Postgres Format - npm i pg
+Postgres Format - npm i pg format
 Dotenv - npm i dotenv --save
 Express - npm i express
 Nodemon - npm i nodemon

@@ -7,12 +7,15 @@ const {
 const db = require("../connection");
 const { dropTables, createTables } = require("../helpers/manage-tables");
 
+// const topicData = require("../test-data/topics.js");
+
 const seed = async ({ topicData, userData, articleData, commentData }) => {
   await dropTables();
   await createTables();
 
   const insertTopicsQueryStr = format(
     "INSERT INTO topics (slug, description) VALUES %L RETURNING *;",
+
     topicData.map(({ slug, description }) => [slug, description])
   );
   const topicsPromise = db
