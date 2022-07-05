@@ -29,3 +29,62 @@ describe("NC News Topics", () => {
       });
   });
 });
+
+describe("GET:/api/articles", () => {
+  test("responds with an object containing a key of articles with array of articles", () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toHaveLength(12);
+        body.articles.forEach((article) => {
+          expect.objectContaining({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(Number),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_At: expect.any(Number),
+            votes: expect.any(Number),
+          });
+        });
+      });
+  });
+});
+
+describe("2. GET /api/articles/:article_id", () => {
+  test("responds with article by ID", () => {
+    const article_id = 3;
+    return request(app)
+      .get(`/api/articles/${article_id}`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 0,
+        });
+      });
+  });
+  test("responds with article by ID", () => {
+    const article_id = 4;
+    return request(app)
+      .get(`/api/articles/${article_id}`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual({
+          article_id: 4,
+          title: "Student SUES Mitch!",
+          topic: "mitch",
+          author: "rogersop",
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: 0,
+        });
+      });
+  });
+});
