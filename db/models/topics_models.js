@@ -12,32 +12,17 @@ exports.fetchArticles = () => {
   });
 };
 
-// exports.fetchArticlesById = (article_id) => {
-//   return db
-//     .query(
-//       `
-
-//   SELECT *
-// FROM articles
-// WHERE articles.article_id = $1
-//   `[article_id]
-//     )
-//     .then(({ rows, rowCount }) => {
-//       if (rowCount === 0) {
-//         return Promise.reject({
-//           status: 404,
-//           errorMessage: "article ${article_id} does not exist",
-//         });
-//       }
-//       return rows[0];
-//     });
-// };
-
 exports.fetchArticlesById = (article_id) => {
-  console.log(article_id, "<<<< article_id");
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
     .then((result) => {
+      if (!result.rows[0]) {
+        return Promise.reject({
+          status: 404,
+          message: `Article ${article_id} not found!`,
+        });
+      }
+
       return result.rows[0];
     });
 };

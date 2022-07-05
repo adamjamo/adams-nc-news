@@ -31,7 +31,7 @@ describe("NC News Topics", () => {
 });
 
 describe("GET:/api/articles", () => {
-  test("responds with an object containing a key of articles with array of articles", () => {
+  test("Responds with an object containing a key of articles with array of articles", () => {
     return request(app)
       .get(`/api/articles`)
       .expect(200)
@@ -52,8 +52,8 @@ describe("GET:/api/articles", () => {
   });
 });
 
-describe("2. GET /api/articles/:article_id", () => {
-  test("responds with article by ID", () => {
+describe("GET BY ID /api/articles/:article_id", () => {
+  test("Responds with the article by ID", () => {
     const article_id = 3;
     return request(app)
       .get(`/api/articles/${article_id}`)
@@ -70,21 +70,24 @@ describe("2. GET /api/articles/:article_id", () => {
         });
       });
   });
-  test("responds with article by ID", () => {
-    const article_id = 4;
-    return request(app)
-      .get(`/api/articles/${article_id}`)
-      .expect(200)
-      .then(({ body }) => {
-        expect(body.articles).toEqual({
-          article_id: 4,
-          title: "Student SUES Mitch!",
-          topic: "mitch",
-          author: "rogersop",
-          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
-          created_at: "2020-05-06T01:14:00.000Z",
-          votes: 0,
+  describe("GET BY ID ERROR HANDLING", () => {
+    test("404 message: Returns 404 error if article doesn't exist", () => {
+      const article_id = 13;
+      return request(app)
+        .get(`/api/articles/${article_id}`)
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toEqual(`Article ${article_id} not found!`);
         });
-      });
+    });
+    test("400 message: Returns 400 error if data type is incorrect", () => {
+      const article_id = "abc";
+      return request(app)
+        .get(`/api/articles/${article_id}`)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Invalid ID");
+        });
+    });
   });
 });

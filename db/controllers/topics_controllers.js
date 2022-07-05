@@ -11,15 +11,19 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-  console.log("inside controller");
   fetchArticles().then((articles) => {
     return res.status(200).send({ articles });
   });
 };
 
-exports.getArticlesById = (req, res) => {
+exports.getArticlesById = (req, res, next) => {
   const { article_id } = req.params;
-  fetchArticlesById(article_id).then((article) => {
-    res.status(200).send({ articles: article });
-  });
+
+  fetchArticlesById(article_id)
+    .then((article) => {
+      res.status(200).send({ articles: article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
