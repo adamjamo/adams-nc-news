@@ -4,7 +4,7 @@ const express = require("express");
 const { getTopics } = require("./controllers/topics_controllers.js");
 const app = express();
 
-// app.use(express.json());
+app.use(express.json());
 app.get("/api/topics", getTopics);
 
 app.use("*", (req, res) => {

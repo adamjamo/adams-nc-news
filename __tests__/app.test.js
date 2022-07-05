@@ -4,7 +4,7 @@ const db = require("../db/connection.js");
 const request = require("supertest");
 const app = require("../db/app.js");
 beforeEach(() => seed(data));
-//console.log(shopData + "this is shop data");
+
 afterAll(() => db.end());
 
 describe("NC News Topics", () => {
@@ -16,6 +16,7 @@ describe("NC News Topics", () => {
         topics.forEach((topic) => {
           expect(topic).toHaveProperty("description");
           expect(topic).toHaveProperty("slug");
+          expect(topics.length).toBe(3);
         });
       });
   });
