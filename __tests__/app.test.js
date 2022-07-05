@@ -91,3 +91,74 @@ describe("GET BY ID /api/articles/:article_id", () => {
     });
   });
 });
+
+describe("5. PATCH /api/articles/:article_id", () => {
+  test("status:200, updates article votes with a plus amount", () => {
+    const voteUpdate = {
+      inc_votes: 1,
+    };
+    const article_id = 3;
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 1,
+        });
+      });
+  });
+  test("status:200, updates article votes with a minus amount", () => {
+    const voteUpdate = {
+      inc_votes: -1,
+    };
+    const article_id = 3;
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send(voteUpdate)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual({
+          article_id: 3,
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: -1,
+        });
+      });
+  });
+  describe("5 ERROR HANDLING", () => {
+    test("status:400, responds with an error message when passed a bad user ID", () => {
+      const voteUpdate = {
+        inc_votes: "abc",
+      };
+      const article_id = 2;
+      return request(app)
+        .patch(`/api/articles/${article_id}`)
+        .send(voteUpdate)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Invalid ID");
+        });
+    });
+    test("status:400, responds with an error message if passed an empty object", () => {
+      const voteUpdate = {};
+      const article_id = 2;
+      return request(app)
+        .patch(`/api/articles/${article_id}`)
+        .send(voteUpdate)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Empty input");
+        });
+    });
+  });
+});
