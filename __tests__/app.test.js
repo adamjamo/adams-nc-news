@@ -62,12 +62,14 @@ describe("GET ARTICLE BY ID", () => {
       .then(({ body }) => {
         expect(body.article).toEqual({
           article_id: 3,
+
           title: "Eight pug gifs that remind me of mitch",
           topic: "mitch",
           author: "icellusedkars",
           body: "some gifs",
           created_at: "2020-11-03T09:12:00.000Z",
           votes: 0,
+          comment_count: "2",
         });
       });
   });
@@ -216,5 +218,28 @@ describe("GET USERS", () => {
           expect(message).toBe("Path not found");
         });
     });
+  });
+});
+
+/////// added comme t count
+
+describe("GET ARTICLES WITH ADDED COMMENT COUNT", () => {
+  test("Responds with article including comment count", () => {
+    const article_id = 5;
+    return request(app)
+      .get(`/api/articles/${article_id}`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual({
+          article_id: 5,
+          title: "UNCOVERED: catspiracy to bring down democracy",
+          topic: "cats",
+          author: "rogersop",
+          body: "Bastet walks amongst us, and the cats are taking arms!",
+          created_at: "2020-08-03T13:14:00.000Z",
+          votes: 0,
+          comment_count: "2",
+        });
+      });
   });
 });
