@@ -7,7 +7,7 @@ beforeEach(() => seed(data));
 
 afterAll(() => db.end());
 
-describe("NC News Topics", () => {
+describe("GET Topics", () => {
   test("200 message: returns topics objects in an array", () => {
     return request(app)
       .get("/api/topics")
@@ -20,17 +20,18 @@ describe("NC News Topics", () => {
         });
       });
   });
-  test("404 message: Returns 404 error if path is invalid", () => {
-    return request(app)
-      .get("/api/topiiicccaaaanna")
-      .expect(404)
-      .then(({ body: { message } }) => {
-        expect(message).toBe("Path not found");
-      });
+  describe("GET Topics ERROR HANDLING", () => {
+    test("404 message: Returns 404 error if path is invalid", () => {
+      return request(app)
+        .get("/api/topiiicccaaaanna")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Path not found");
+        });
+    });
   });
 });
-
-describe("GET:/api/articles", () => {
+describe("GET ARTICLE", () => {
   test("Responds with an object containing a key of articles with array of articles", () => {
     return request(app)
       .get(`/api/articles`)
@@ -52,7 +53,7 @@ describe("GET:/api/articles", () => {
   });
 });
 
-describe("GET BY ID /api/articles/:article_id", () => {
+describe("GET ARTICLE BY ID", () => {
   test("Responds with the article by ID", () => {
     const article_id = 3;
     return request(app)
@@ -70,7 +71,7 @@ describe("GET BY ID /api/articles/:article_id", () => {
         });
       });
   });
-  describe("GET BY ID ERROR HANDLING", () => {
+  describe("GET ARTICLE BY ID ERROR HANDLING", () => {
     test("404 message: Returns 404 error if article doesn't exist", () => {
       const article_id = 13;
       return request(app)
@@ -92,7 +93,7 @@ describe("GET BY ID /api/articles/:article_id", () => {
   });
 });
 
-describe("5. PATCH /api/articles/:article_id", () => {
+describe("PATCH VOTE COUNT", () => {
   test("status:200, updates article votes with a plus amount", () => {
     const voteUpdate = {
       inc_votes: 1,
@@ -135,7 +136,7 @@ describe("5. PATCH /api/articles/:article_id", () => {
         });
       });
   });
-  describe("5 ERROR HANDLING", () => {
+  describe("PATCH VOTE ERROR HANDLING", () => {
     test("status:400, responds with an error message when passed a bad user ID", () => {
       const voteUpdate = {
         inc_votes: "abc",
@@ -185,6 +186,36 @@ describe("5. PATCH /api/articles/:article_id", () => {
         .expect(404)
         .then(({ body: { message } }) => {
           expect(message).toEqual("Article ID not found!");
+        });
+    });
+  });
+});
+
+///// get users //////
+
+describe("GET USERS", () => {
+  test("Responds with an array of objects containing users", () => {
+    return request(app)
+      .get(`/api/users`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toHaveLength(4);
+        body.users.forEach((user) => {
+          expect.objectContaining({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+  describe("GET USERS ERROR HANDLING", () => {
+    test("404 message: Returns 404 error if path is invalid", () => {
+      return request(app)
+        .get("/api/notauser")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Path not found");
         });
     });
   });

@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchArticlesById,
   updateArticleVotesById,
+  fetchUsers,
 } = require("../models/topics_models.js");
 
 exports.getTopics = (req, res, next) => {
@@ -40,4 +41,10 @@ exports.patchArticleVotesById = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.getUsers = (req, res) => {
+  fetchUsers().then((users) => {
+    return res.status(200).send({ users });
+  });
 };
