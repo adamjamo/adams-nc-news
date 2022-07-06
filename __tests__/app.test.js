@@ -3,6 +3,7 @@ const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
 const request = require("supertest");
 const app = require("../db/app.js");
+const sorted = require("jest-sorted");
 beforeEach(() => seed(data));
 
 afterAll(() => db.end());
@@ -38,6 +39,7 @@ describe("GET ARTICLE", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.articles).toHaveLength(12);
+        console.log(body.articles, "check this");
         body.articles.forEach((article) => {
           expect.objectContaining({
             article_id: expect.any(Number),
@@ -221,8 +223,6 @@ describe("GET USERS", () => {
   });
 });
 
-/////// added comme t count
-
 describe("GET ARTICLES WITH ADDED COMMENT COUNT", () => {
   test("Responds with article including comment count", () => {
     const article_id = 5;
@@ -240,6 +240,29 @@ describe("GET ARTICLES WITH ADDED COMMENT COUNT", () => {
           votes: 0,
           comment_count: "2",
         });
+      });
+  });
+});
+
+describe("GET ARTICLES IN DATE ORDER", () => {
+  test("Responds with an object containing a key of articles with array of articles", () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSorted("created_at", {
+          descending: true,
+        });
+      });
+  });
+});
+describe("GET ARTICLES ERROR HANDLING", () => {
+  test("404 message: Returns 404 error if path is invalid", () => {
+    return request(app)
+      .get("/api/artivld")
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("Path not found");
       });
   });
 });
