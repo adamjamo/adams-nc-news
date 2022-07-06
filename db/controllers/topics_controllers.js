@@ -22,7 +22,7 @@ exports.getArticlesById = (req, res, next) => {
 
   fetchArticlesById(article_id)
     .then((article) => {
-      res.status(200).send({ articles: article });
+      res.status(200).send({ article: article });
     })
     .catch((err) => {
       next(err);

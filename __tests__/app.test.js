@@ -59,7 +59,7 @@ describe("GET BY ID /api/articles/:article_id", () => {
       .get(`/api/articles/${article_id}`)
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toEqual({
+        expect(body.article).toEqual({
           article_id: 3,
           title: "Eight pug gifs that remind me of mitch",
           topic: "mitch",
@@ -77,7 +77,7 @@ describe("GET BY ID /api/articles/:article_id", () => {
         .get(`/api/articles/${article_id}`)
         .expect(404)
         .then(({ body: { message } }) => {
-          expect(message).toEqual(`Article ${article_id} not found!`);
+          expect(message).toEqual("Article not found!");
         });
     });
     test("400 message: Returns 400 error if data type is incorrect", () => {
@@ -86,7 +86,7 @@ describe("GET BY ID /api/articles/:article_id", () => {
         .get(`/api/articles/${article_id}`)
         .expect(400)
         .then(({ body: { message } }) => {
-          expect(message).toBe("Invalid ID");
+          expect(message).toBe("Invalid data type, must be a number!");
         });
     });
   });
@@ -146,7 +146,7 @@ describe("5. PATCH /api/articles/:article_id", () => {
         .send(voteUpdate)
         .expect(400)
         .then(({ body: { message } }) => {
-          expect(message).toBe("Invalid ID");
+          expect(message).toBe("Invalid data type, must be a number!");
         });
     });
     test("status:400, responds with an error message if passed an empty object", () => {
@@ -158,6 +158,33 @@ describe("5. PATCH /api/articles/:article_id", () => {
         .expect(400)
         .then(({ body: { message } }) => {
           expect(message).toBe("Empty input");
+        });
+    });
+
+    test("400 message: Returns 400 error if given incorrect data type in voteUpdate", () => {
+      const voteUpdate = {
+        inc_votes: "Ten",
+      };
+      const article_id = 2;
+      return request(app)
+        .patch(`/api/articles/${article_id}`)
+        .send(voteUpdate)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toEqual("Invalid data type, must be a number!");
+        });
+    });
+    test("404 message: Returns 404 error if article ID doesn't exist", () => {
+      const voteUpdate = {
+        inc_votes: 2,
+      };
+      const article_id = 9999;
+      return request(app)
+        .patch(`/api/articles/${article_id}`)
+        .send(voteUpdate)
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toEqual("Article ID not found!");
         });
     });
   });

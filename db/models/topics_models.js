@@ -19,7 +19,7 @@ exports.fetchArticlesById = (article_id) => {
       if (!result.rows[0]) {
         return Promise.reject({
           status: 404,
-          message: `Article ${article_id} not found!`,
+          message: `Article not found!`,
         });
       }
 
@@ -34,6 +34,12 @@ exports.updateArticleVotesById = ({ article_id, increase }) => {
       [increase, article_id]
     )
     .then(({ rows }) => {
+      if (!rows[0]) {
+        return Promise.reject({
+          status: 404,
+          message: "Article ID not found!",
+        });
+      }
       return rows[0];
     });
 };
