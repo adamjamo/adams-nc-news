@@ -15,6 +15,7 @@ describe("GET /api/topics", () => {
         .get("/api/topics")
         .expect(200)
         .then(({ body: { topics } }) => {
+          expect(topics).toHaveLength(3);
           topics.forEach((topic) => {
             expect(topic).toHaveProperty("description");
             expect(topic).toHaveProperty("slug");
@@ -35,8 +36,6 @@ describe("GET /api/topics", () => {
   });
 });
 
-//////GET ARTICLES//////
-
 describe("GET /api/articles", () => {
   describe("Happy Paths", () => {
     test("Responds with an object containing a key of articles with array of articles", () => {
@@ -45,7 +44,6 @@ describe("GET /api/articles", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.articles).toHaveLength(12);
-          console.log(body.articles, "check this");
           body.articles.forEach((article) => {
             expect.objectContaining({
               article_id: expect.any(Number),
@@ -58,16 +56,6 @@ describe("GET /api/articles", () => {
             });
           });
         });
-    });
-    describe("Error Handling", () => {
-      test("404 message: Returns 404 error if path is invalid", () => {
-        return request(app)
-          .get("/api/notauser")
-          .expect(404)
-          .then(({ body: { message } }) => {
-            expect(message).toBe("Path not found");
-          });
-      });
     });
   });
 });
@@ -92,21 +80,21 @@ describe("GET /api/articles/:article_id", () => {
           });
         });
     });
-    test("Responds with article including comment count", () => {
-      const article_id = 5;
+    test("Responds with article including comment count when article has no comments", () => {
+      const article_id = 8;
       return request(app)
         .get(`/api/articles/${article_id}`)
         .expect(200)
         .then(({ body }) => {
           expect(body.article).toEqual({
-            article_id: 5,
-            title: "UNCOVERED: catspiracy to bring down democracy",
-            topic: "cats",
-            author: "rogersop",
-            body: "Bastet walks amongst us, and the cats are taking arms!",
-            created_at: "2020-08-03T13:14:00.000Z",
+            article_id: 8,
+            title: "Does Mitch predate civilisation?",
+            topic: "mitch",
+            author: "icellusedkars",
+            body: "Archaeologists have uncovered a gigantic statue from the dawn of humanity, and it has an uncanny resemblance to Mitch. Surely I am not the only person who can see this?!",
+            created_at: "2020-04-17T01:08:00.000Z",
             votes: 0,
-            comment_count: "2",
+            comment_count: "0",
           });
         });
     });
@@ -142,8 +130,6 @@ describe("GET /api/articles/:article_id", () => {
     });
   });
 });
-
-/////PATCH/////
 
 describe("PATCH /api/articles/:article_id", () => {
   describe("Happy Paths", () => {
@@ -244,8 +230,6 @@ describe("PATCH /api/articles/:article_id", () => {
     });
   });
 });
-
-////////////USERS////
 
 describe("GET USERS", () => {
   test("Responds with an array of objects containing users", () => {
