@@ -44,7 +44,11 @@ exports.patchArticleVotesById = (req, res, next) => {
 };
 
 exports.getUsers = (req, res) => {
-  fetchUsers().then((users) => {
-    return res.status(200).send({ users });
-  });
+  fetchUsers()
+    .then((users) => {
+      return res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

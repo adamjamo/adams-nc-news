@@ -191,8 +191,6 @@ describe("PATCH VOTE COUNT", () => {
   });
 });
 
-///// get users //////
-
 describe("GET USERS", () => {
   test("Responds with an array of objects containing users", () => {
     return request(app)
