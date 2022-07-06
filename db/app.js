@@ -5,7 +5,7 @@ const {
   getArticlesById,
   patchArticleVotesById,
   getUsers,
-} = require("./controllers/topics_controllers.js");
+} = require("./controllers/controllers.js");
 const {
   serverErr,
   invalidPath,
