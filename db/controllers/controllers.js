@@ -4,7 +4,7 @@ const {
   fetchArticlesById,
   updateArticleVotesById,
   fetchUsers,
-} = require("../models/topics_models.js");
+} = require("../models/models.js");
 
 exports.getTopics = (req, res, next) => {
   fetchTopics().then((topics) => {
