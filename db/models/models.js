@@ -68,3 +68,17 @@ exports.fetchUsers = () => {
     return results.rows;
   });
 };
+
+exports.fetchArticlesComments = (article_id) => {
+  return db
+    .query(
+      `
+  SELECT * FROM comments
+  WHERE article_id = $1
+  ;`,
+      [article_id]
+    )
+    .then((results) => {
+      return results.rows;
+    });
+};
