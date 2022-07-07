@@ -108,6 +108,7 @@ describe("GET /api/articles/:article_id", () => {
           });
         });
     });
+
     describe("Error Handling", () => {
       test("404 message: Returns 404 error if article doesn't exist", () => {
         const article_id = 13;
@@ -127,6 +128,49 @@ describe("GET /api/articles/:article_id", () => {
             expect(message).toBe("Invalid data type, must be a number!");
           });
       });
+    });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  describe("Happy Paths", () => {
+    test("Responds with an array of comments for the given article_id containing comment_id, votes, created_at, author and body", () => {
+      const article_id = 3;
+      return request(app)
+        .get(`/api/articles/${article_id}/comments`)
+        .expect(200)
+        .then(({ body }) => {
+          console.log(body, "IS THIS HERE?????");
+          expect(body.comments).toEqual([
+            {
+              article_id: 3,
+              author: "icellusedkars",
+              body: "git push origin master",
+              comment_id: 10,
+              created_at: "2020-06-20T07:24:00.000Z",
+              votes: 0,
+            },
+            {
+              article_id: 3,
+              author: "icellusedkars",
+              body: "Ambidextrous marsupial",
+              comment_id: 11,
+              created_at: "2020-09-19T23:10:00.000Z",
+              votes: 0,
+            },
+          ]);
+        });
+    });
+  });
+  describe("Error Handling", () => {
+    test("Responds with 404 error if passed and invalid path", () => {
+      const article_id = 3;
+      return request(app)
+        .get(`/api/articles/${article_id}/efgfds`)
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toEqual("Path not found");
+        });
     });
   });
 });
