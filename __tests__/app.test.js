@@ -140,7 +140,6 @@ describe("GET /api/articles/:article_id/comments", () => {
         .get(`/api/articles/${article_id}/comments`)
         .expect(200)
         .then(({ body }) => {
-          console.log(body, "IS THIS HERE?????");
           expect(body.comments).toEqual([
             {
               article_id: 3,
