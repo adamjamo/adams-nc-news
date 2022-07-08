@@ -3,9 +3,9 @@ const {
   getTopics,
   getArticles,
   getArticlesById,
+  getArticlesCommentsById,
   patchArticleVotesById,
   getUsers,
-  getArticlesCommentsById,
   postComment,
 } = require("./controllers/controllers.js");
 const {
@@ -16,6 +16,7 @@ const {
   emptyPatch,
   noUser,
   noArticleId,
+  noTopicFound,
   failingSchema,
 } = require("./errors.js");
 const app = express();
@@ -33,6 +34,7 @@ app.use(customError);
 app.use(emptyPatch);
 app.use(failingSchema);
 app.use(noArticleId);
+app.use(noTopicFound);
 app.use(noUser);
 app.use(stringInsteadOfNum);
 app.use(invalidPath);

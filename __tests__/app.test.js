@@ -378,3 +378,47 @@ describe("POST /api/articles/:article_id/comments", () => {
     });
   });
 });
+
+///////// TASK 11 GET BY QUERY ///////
+
+describe.only("GET /api/articles?=sort_by", () => {
+  describe("Happy Paths", () => {
+    test("200 returns articles based on query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=ASC&topic=cats")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy("title", { descending: false });
+          articles.forEach((article) => {
+            expect(article.topic).toEqual("cats");
+          });
+        });
+    });
+  });
+  describe("Error Handling", () => {
+    test("Responds with 404 and error message if given topic not found", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=ASC&topic=dogs")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("No topic found");
+        });
+    });
+    test("Responds with 404 and error message if given order not found", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=ISC&topic=cats")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Must be ASC or DESC order");
+        });
+    });
+    test("Responds with 404 and error message if given sort_by method not found", () => {
+      return request(app)
+        .get("/api/articles?sort_by=colour&order=ASC&topic=cats")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Sorting option invalid");
+        });
+    });
+  });
+});

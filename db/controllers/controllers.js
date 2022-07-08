@@ -18,8 +18,13 @@ exports.getTopics = (req, res, next) => {
     });
 };
 
-exports.getArticles = (req, res) => {
-  fetchArticles()
+exports.getArticles = (req, res, next) => {
+  const query = req.query;
+  const order = query.order;
+  const sort_by = query.sort_by;
+  const topic = query.topic;
+
+  fetchArticles(sort_by, order, topic)
     .then((articles) => {
       return res.status(200).send({ articles });
     })
