@@ -34,7 +34,6 @@ exports.noUser = (err, req, res, next) => {
 
 exports.stringInsteadOfNum = (err, req, res, next) => {
   if (err.code === "22P02" || err.code === "42601") {
-    console.log(err, "STRINGINSTEADOFNUM");
     res.status(400).send({ message: "Invalid data type, must be a number!" });
   } else next(err);
 };

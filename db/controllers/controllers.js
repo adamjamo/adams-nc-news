@@ -36,7 +36,6 @@ exports.getArticlesById = (req, res, next) => {
       res.status(200).send({ article: article });
     })
     .catch((err) => {
-      console.log(err, "SERVER ERROR");
       next(err);
     });
 };
@@ -50,7 +49,6 @@ exports.patchArticleVotesById = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch((err) => {
-      console.log(err, "PATCH");
       next(err);
     });
 };
@@ -61,7 +59,6 @@ exports.getUsers = (req, res) => {
       return res.status(200).send({ users });
     })
     .catch((err) => {
-      console.log(err, "check this errr");
       next(err);
     });
 };
