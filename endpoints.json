@@ -1,6 +1,6 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "Provides up a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
@@ -9,19 +9,105 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "GET /api/articles/:article_id": {
+    "description": "Provides an article object of the requested ID",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "title": "Eight pug gifs that remind me of mitch",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "some gifs",
+        "created_at": 1604394720000,
+        "votes": 0
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates vote count",
+    "queries": [],
+    "exampleInputBody": "{ inc_votes: 1 }",
+    "exampleResponse": {
+      "article": {
+        "title": "Eight pug gifs that remind me of mitch",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "some gifs",
+        "created_at": 1604394720000,
+        "votes": 1
+      }
+    }
+  },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "Provides an array of all articles and can be queried",
+    "queries": ["sort_by", "order", "topics"],
     "exampleResponse": {
       "articles": [
         {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
+          "title": "Moustache",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "Have you seen the size of that thing?",
+          "created_at": 1602419040000,
+          "votes": 0
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "Provides an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "Provides all comments as per ID",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "The owls are not what they seem.",
+          "votes": 20,
+          "author": "icellusedkars",
+          "article_id": 9,
+          "created_at": 1584205320000
+        },
+        {
+          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          "votes": 16,
+          "author": "butter_bridge",
+          "article_id": 9,
+          "created_at": 1586179020000
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds new body to comment",
+    "queries": [],
+    "exampleInputBody": {
+      "body": "I like to boogie boogie",
+      "author": "rogersop"
+    },
+    "exampleResponse": {
+      "comment": {
+        "body": "I like to boogie boogie",
+        "votes": 16,
+        "author": "rogersop",
+        "article_id": 1,
+        "created_at": 1595294400000
+      }
+    }
+  },
+  "DELETE  /api/comments/:comment_id": {
+    "description": "Deletes comment by ID",
+    "queries": []
   }
 }
