@@ -49,7 +49,7 @@ exports.fetchArticles = async (
       return articleCheck.rows;
     }
     if (articleCheck.rows.length === 0 && topicCheck.rows.length === 0) {
-      return Promise.reject({ status: 404, message: "No topic found" });
+      return Promise.reject({ status: 404, message: "Article ID not found!" });
     } else {
       str += `WHERE articles.topic = $1 `;
       topicArr.push(topic);
@@ -81,7 +81,7 @@ exports.fetchArticlesById = (article_id) => {
       if (!result.rows[0]) {
         return Promise.reject({
           status: 404,
-          message: "No topic found",
+          message: "Article ID not found!",
         });
       }
 
@@ -99,7 +99,7 @@ exports.updateArticleVotesById = ({ article_id, increase }) => {
       if (!rows[0]) {
         return Promise.reject({
           status: 404,
-          message: "No topic found",
+          message: "Article ID not found!",
         });
       }
       return rows[0];
@@ -137,31 +137,12 @@ exports.insertComment = (username, body, id) => {
     });
 };
 
-exports.selectArticlesByQuery = (sort_by, order) => {
-  const queryProperty = sort_by;
-  if (!sort_by) {
-    sort_by === "ascending";
-  }
-  const queryStr = `SELECT * 
-  FROM articles ORDER BY ${sort_by} ascending;`;
-  if (!queryProperty) {
-    return db
-      .query(
-        `SELECT * 
-      FROM articles 
-      GROUP BY articles.article_id
-      ORDER BY votes ascending;`
-      )
-      .then((dbResponse) => {
-        const articles = dbResponse.rows;
-
-        return articles;
-      });
-  } else {
-    return db.query(queryStr).then((dbResponse) => {
-      console.log(queryProperty);
-      const articles = dbResponse.rows;
-      return articles;
+exports.removeComment = (comment_id) => {
+  return db
+    .query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [
+      comment_id,
+    ])
+    .then((results) => {
+      return results.rows[0];
     });
-  }
 };

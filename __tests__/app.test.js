@@ -116,7 +116,7 @@ describe("GET /api/articles/:article_id", () => {
           .get(`/api/articles/${article_id}`)
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("Article not found!");
+            expect(message).toBe("Article ID not found!");
           });
       });
       test("400 message: Returns 400 error if data type is incorrect", () => {
@@ -381,7 +381,7 @@ describe("POST /api/articles/:article_id/comments", () => {
 
 ///////// TASK 11 GET BY QUERY ///////
 
-describe.only("GET /api/articles?=sort_by", () => {
+describe("GET /api/articles?=sort_by", () => {
   describe("Happy Paths", () => {
     test("200 returns articles based on query", () => {
       return request(app)
@@ -401,7 +401,7 @@ describe.only("GET /api/articles?=sort_by", () => {
         .get("/api/articles?sort_by=title&order=ASC&topic=dogs")
         .expect(404)
         .then(({ body: { message } }) => {
-          expect(message).toBe("No topic found");
+          expect(message).toBe("Article ID not found!");
         });
     });
     test("Responds with 404 and error message if given order not found", () => {
@@ -418,6 +418,46 @@ describe.only("GET /api/articles?=sort_by", () => {
         .expect(404)
         .then(({ body: { message } }) => {
           expect(message).toBe("Sorting option invalid");
+        });
+    });
+  });
+});
+
+//////// DELETE////////
+
+describe("DELETE /api/comments/:comment_id", () => {
+  describe("Happy Paths", () => {
+    test("204 content deleted by ID", () => {
+      const comment_id = 3;
+      return request(app).delete(`/api/comments/${comment_id}`).expect(204);
+    });
+  });
+  describe("Error Handling", () => {
+    test("Responds with 404 and error message if given comment ID not found", () => {
+      const comment_id = 3;
+      return request(app)
+        .get(`/api/comments/${comment_id}`)
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Path not found");
+        });
+    });
+    test("Responds with 404 and error message if given a comment ID that does not exist", () => {
+      const comment_id = 370;
+      return request(app)
+        .delete(`/api/comments${comment_id}`)
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Path not found");
+        });
+    });
+    test("Responds with 400 and error message if given a string instead of number for comment ID", () => {
+      const comment_id = "Ohana means family";
+      return request(app)
+        .delete(`/api/comments/${comment_id}`)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Invalid data type, must be a number!");
         });
     });
   });

@@ -6,6 +6,7 @@ const {
   fetchUsers,
   fetchArticlesComments,
   insertComment,
+  removeComment,
 } = require("../models/models.js");
 
 exports.getTopics = (req, res, next) => {
@@ -85,6 +86,17 @@ exports.postComment = (req, res, next) => {
   insertComment(username, body, article_id)
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  removeComment(comment_id)
+    .then((comment) => {
+      res.status(204).send(comment);
     })
     .catch((err) => {
       next(err);

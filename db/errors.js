@@ -26,12 +26,6 @@ exports.noArticleId = (err, req, res, next) => {
   } else next(err);
 };
 
-exports.noTopicFound = (err, req, res, next) => {
-  if (err.code === "23503" && err.constraint === "comments_article_id_fkey") {
-    res.status(404).send({ message: "No topic found" });
-  } else next(err);
-};
-
 exports.noUser = (err, req, res, next) => {
   if (err.code === "23503" && err.constraint === "comments_author_fkey") {
     res.status(404).send({ message: "Username does not exist" });

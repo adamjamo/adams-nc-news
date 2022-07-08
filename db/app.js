@@ -7,6 +7,7 @@ const {
   patchArticleVotesById,
   getUsers,
   postComment,
+  deleteComment,
 } = require("./controllers/controllers.js");
 const {
   serverError,
@@ -16,7 +17,6 @@ const {
   emptyPatch,
   noUser,
   noArticleId,
-  noTopicFound,
   failingSchema,
 } = require("./errors.js");
 const app = express();
@@ -29,12 +29,12 @@ app.get("/api/articles/:article_id/comments", getArticlesCommentsById);
 app.patch("/api/articles/:article_id", patchArticleVotesById);
 app.get("/api/users", getUsers);
 app.post("/api/articles/:article_id/comments", postComment);
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use(customError);
 app.use(emptyPatch);
 app.use(failingSchema);
 app.use(noArticleId);
-app.use(noTopicFound);
 app.use(noUser);
 app.use(stringInsteadOfNum);
 app.use(invalidPath);
