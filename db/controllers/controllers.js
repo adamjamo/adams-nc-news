@@ -5,18 +5,27 @@ const {
   updateArticleVotesById,
   fetchUsers,
   fetchArticlesComments,
+  insertComment,
 } = require("../models/models.js");
 
 exports.getTopics = (req, res, next) => {
-  fetchTopics().then((topics) => {
-    res.status(200).send({ topics });
-  });
+  fetchTopics()
+    .then((topics) => {
+      res.status(200).send({ topics });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getArticles = (req, res) => {
-  fetchArticles().then((articles) => {
-    return res.status(200).send({ articles });
-  });
+  fetchArticles()
+    .then((articles) => {
+      return res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getArticlesById = (req, res, next) => {
@@ -59,6 +68,18 @@ exports.getArticlesCommentsById = (req, res, next) => {
   fetchArticlesComments(article_id)
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postComment = (req, res, next) => {
+  const { username, body } = req.body;
+  const { article_id } = req.params;
+  insertComment(username, body, article_id)
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch((err) => {
       next(err);

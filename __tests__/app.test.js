@@ -111,12 +111,12 @@ describe("GET /api/articles/:article_id", () => {
 
     describe("Error Handling", () => {
       test("404 message: Returns 404 error if article doesn't exist", () => {
-        const article_id = 13;
+        const article_id = 999;
         return request(app)
           .get(`/api/articles/${article_id}`)
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toEqual("Article not found!");
+            expect(message).toBe("Article not found!");
           });
       });
       test("400 message: Returns 400 error if data type is incorrect", () => {
@@ -257,17 +257,17 @@ describe("PATCH /api/articles/:article_id", () => {
             expect(message).toEqual("Invalid data type, must be a number!");
           });
       });
-      test("404 message: Returns 404 error if article ID doesn't exist", () => {
+      test("Responds with 404 status and error message if given an article_id that does not exist", () => {
+        const article_id = 999;
         const voteUpdate = {
-          inc_votes: 2,
+          inc_votes: 1,
         };
-        const article_id = 9999;
         return request(app)
           .patch(`/api/articles/${article_id}`)
           .send(voteUpdate)
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toEqual("Article ID not found!");
+            expect(message).toBe("Article ID not found!");
           });
       });
     });
@@ -289,5 +289,92 @@ describe("GET USERS", () => {
           });
         });
       });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  describe("Happy Paths", () => {
+    test("Responds with 201 status and comment newly added to database", () => {
+      const article_id = 4;
+      const newComment = {
+        username: "icellusedkars",
+        body: "But soft, what light through yonder window breaks? It is the East, and Juliet is the sun.",
+      };
+      return request(app)
+        .post(`/api/articles/${article_id}/comments`)
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.comment["article_id"]).toBe(4),
+            expect(body.comment["author"]).toBe("icellusedkars"),
+            expect(body.comment["body"]).toBe(
+              "But soft, what light through yonder window breaks? It is the East, and Juliet is the sun."
+            ),
+            expect(body.comment).toMatchObject({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              body: expect.any(String),
+              comment_id: expect.any(Number),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+            });
+        });
+    });
+    describe("Error Handling", () => {
+      test("Responds with 404 status and error message if given a username that does not exist in users", () => {
+        const article_id = 4;
+        const newComment = {
+          username: "adamjamo",
+          body: "To be, or not to be...that is the question?",
+        };
+        return request(app)
+          .post(`/api/articles/${article_id}/comments`)
+          .send(newComment)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Username does not exist");
+          });
+      });
+      test("Responds with 404 status and error message if given an article_id number that does not exist", () => {
+        const article_id = 999;
+        const newComment = {
+          username: "icellusedkars",
+          body: "Yesterday...all my troubles seemed so far away",
+        };
+        return request(app)
+          .post(`/api/articles/${article_id}/comments`)
+          .send(newComment)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Article ID not found!");
+          });
+      });
+      test("Responds with 400 status and error message if missing required data", () => {
+        const article_id = 4;
+        const newComment = {};
+        return request(app)
+          .post(`/api/articles/${article_id}/comments`)
+          .send(newComment)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Empty input");
+          });
+      });
+
+      test("Responds with 400 and error message if given a string instead of number for ID", () => {
+        const article_id = "dfgfds";
+        const newComment = {
+          username: "icellusedkars",
+          body: "Yesterday...all my troubles seemed so far away",
+        };
+        return request(app)
+          .post(`/api/articles/${article_id}/comments`)
+          .send(newComment)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Invalid data type, must be a number!");
+          });
+      });
+    });
   });
 });
