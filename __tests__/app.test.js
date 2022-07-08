@@ -360,18 +360,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             expect(message).toBe("Empty input");
           });
       });
-      test("Responds with 400 status and error message if given an empty post", () => {
-        const article_id = 4;
-        const newComment = {};
 
-        return request(app)
-          .post(`/api/articles/${article_id}/comments`)
-          .send(newComment)
-          .expect(400)
-          .then(({ body: { message } }) => {
-            expect(message).toBe("Empty input");
-          });
-      });
       test("Responds with 400 and error message if given a string instead of number for ID", () => {
         const article_id = "dfgfds";
         const newComment = {
