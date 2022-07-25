@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const {
   getTopics,
   getArticles,
@@ -21,6 +22,8 @@ const {
   failingSchema,
 } = require("./errors.js");
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 app.get(`/api/getapi`);
