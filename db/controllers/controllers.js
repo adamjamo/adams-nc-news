@@ -9,6 +9,12 @@ const {
   removeComment,
 } = require("../models/models.js");
 
+const endpoints = require(`../../endpoints.json`);
+
+exports.getAPI = (req, res) => {
+  res.send({ endpoints });
+};
+
 exports.getTopics = (req, res, next) => {
   fetchTopics()
     .then((topics) => {
