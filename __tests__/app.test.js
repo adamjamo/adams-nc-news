@@ -178,7 +178,7 @@ describe("PATCH /api/articles/:article_id", () => {
   describe("Happy Paths", () => {
     test("status:200, updates article votes with a plus amount", () => {
       const voteUpdate = {
-        inc_votes: 1,
+        votes: 1,
       };
       const article_id = 3;
       return request(app)
@@ -199,7 +199,7 @@ describe("PATCH /api/articles/:article_id", () => {
     });
     test("status:200, updates article votes with a minus amount", () => {
       const voteUpdate = {
-        inc_votes: -1,
+        votes: -1,
       };
       const article_id = 3;
       return request(app)
@@ -221,7 +221,7 @@ describe("PATCH /api/articles/:article_id", () => {
     describe("Error Handling", () => {
       test("status:400, responds with an error message when passed a bad user ID", () => {
         const voteUpdate = {
-          inc_votes: "abc",
+          votes: "abc",
         };
         const article_id = 2;
         return request(app)
@@ -246,7 +246,7 @@ describe("PATCH /api/articles/:article_id", () => {
 
       test("400 message: Returns 400 error if given incorrect data type in voteUpdate", () => {
         const voteUpdate = {
-          inc_votes: "Ten",
+          votes: "Ten",
         };
         const article_id = 2;
         return request(app)
@@ -260,7 +260,7 @@ describe("PATCH /api/articles/:article_id", () => {
       test("Responds with 404 status and error message if given an article_id that does not exist", () => {
         const article_id = 999;
         const voteUpdate = {
-          inc_votes: 1,
+          votes: 1,
         };
         return request(app)
           .patch(`/api/articles/${article_id}`)
