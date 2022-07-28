@@ -118,6 +118,7 @@ exports.fetchArticlesComments = (article_id) => {
       `
   SELECT * FROM comments
   WHERE article_id = $1
+  
   ;`,
       [article_id]
     )
